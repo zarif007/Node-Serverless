@@ -1,0 +1,103 @@
+service: dynamodb-crud-api
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.blogsTableName}
+
+custom:
+  blogsTableName: blogs-table-${self:provider.stage}
+
+plugins:
+  - serverless-iam-roles-per-function
+
+functions:
+  getBlog:
+    handler: src/api.getBlog
+    name: get-blog
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: blog/{blogId}
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:GetItem"
+        Resource: !GetAtt BlogsTable.Arn
+  createBlog:
+    handler: src/api.createBlog
+    name: create-blog
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: blog
+          method: POST
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:PutItem"
+        Resource: !GetAtt BlogsTable.Arn
+  updateBlog:
+    handler: src/api.updateBlog
+    name: update-blog
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: blog/{blogId}
+          method: PUT
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:UpdateItem"
+        Resource: !GetAtt BlogsTable.Arn
+  deleteBlog:
+    handler: src/api.deleteBlog
+    name: delete-blog
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: blog/{blogId}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:DeleteItem"
+        Resource: !GetAtt BlogsTable.Arn
+  getAllBlogs:
+    handler: src/api.getAllBlogs
+    name: get-all-blogs
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: blogs
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:Scan"
+        Resource: !GetAtt BlogsTable.Arn
+
+resources:
+  Resources:
+    BlogTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.blogsTableName}
+        AttributeDefinitions:
+          - AttributeName: blogId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: blogId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
