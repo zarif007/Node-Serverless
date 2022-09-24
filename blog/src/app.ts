@@ -2,6 +2,7 @@ import { GetItemCommand, DeleteItemCommand, PutItemCommand, ScanCommand, UpdateI
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 import db from '../db'
 
+
 interface responseInterface {
     statusCode: number,
     body: string
