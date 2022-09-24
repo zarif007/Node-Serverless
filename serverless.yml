@@ -89,7 +89,7 @@ resources:
     BlogTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:custom.blogsTableName}
+        TableName: 'blog'
         AttributeDefinitions:
           - AttributeName: blogId
             AttributeType: S
