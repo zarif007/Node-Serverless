@@ -6,7 +6,7 @@ provider:
   stage: dev
   region: us-east-1
   environment:
-    DYNAMODB_TABLE_NAME: ${self:custom.blogsTableName}
+    DYNAMODB_TABLE_NAME: blog
 
 custom:
   blogsTableName: blogs-table-${self:provider.stage}
