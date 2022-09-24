@@ -6,8 +6,10 @@ provider:
   stage: dev
   region: us-east-1
   environment:
-    DYNAMODB_TABLE_NAME: blog
+    DYNAMODB_TABLE_NAME: ${self:custom.blogTableName}
 
+custom:
+  blogsTableName: blogTable-${self:provider.stage}
 
 plugins:
   - serverless-iam-roles-per-function
@@ -89,7 +91,7 @@ resources:
     BlogTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: blog
+        TableName: ${self:custom.blogsTableName}
         AttributeDefinitions:
           - AttributeName: blogId
             AttributeType: S
