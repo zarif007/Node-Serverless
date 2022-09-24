@@ -8,8 +8,6 @@ provider:
   environment:
     DYNAMODB_TABLE_NAME: blog
 
-custom:
-  blogsTableName: blogs-table-${self:provider.stage}
 
 plugins:
   - serverless-iam-roles-per-function
