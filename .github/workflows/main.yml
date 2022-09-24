@@ -34,7 +34,7 @@ jobs:
       run: yarn install
 
     - name: serverless deploy
-      uses: serverless/github-action@main
+      uses: serverless/github-action@master
       with:
         args: deploy
       env:
